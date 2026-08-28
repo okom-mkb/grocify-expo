@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Welcome Mobile Development</Text>
+      <Text className="text-red-500 text-4xl bg-purple-500">Welcome Mobile dev</Text>
     </View>
   );
 }
