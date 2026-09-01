@@ -1,11 +1,10 @@
 import { SignOutButton } from "@/components/sign-out-button";
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
 import { Show, useSession, useUser } from "@clerk/expo";
-import { UserButton, UserProfileView } from "@clerk/expo/native";
+import { AuthView, UserButton, UserProfileView } from "@clerk/expo/native";
 import { Link } from "expo-router";
 import * as React from "react";
 import { Pressable, StyleSheet, Text, View, Modal } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Page() {
   const { user } = useUser();
@@ -15,51 +14,49 @@ export default function Page() {
   const [isProfileOpen, setIsProfileOpen] = React.useState(false);
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title" style={styles.title}>
-        Welcome!
-      </ThemedText>
-      {/* Show the sign-in and sign-up buttons when the user is signed out */}
+    <>
+      {/* Show the native AuthView login/signup directly on the home page when signed out */}
       <Show when="signed-out">
-        <Link href="/(auth)/sign-in" asChild>
-          <Pressable className="bg-[#0a7ea4] active:opacity-70 py-3 px-6 rounded-lg items-center mt-2 w-full">
-            <Text className="text-white font-semibold text-base">Sign in</Text>
-          </Pressable>
-        </Link>
-        <Link href="/(auth)/sign-up" asChild>
-          <Pressable className="bg-[#0a7ea4] active:opacity-70 py-3 px-6 rounded-lg items-center mt-2 w-full">
-            <Text className="text-white font-semibold text-base">Sign up</Text>
-          </Pressable>
-        </Link>
+        <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+          <AuthView mode="signInOrUp" />
+        </SafeAreaView>
       </Show>
-      {/* Show the sign-out button when the user is signed in */}
+
+      {/* Show the protected user home dashboard when signed in */}
       <Show when="signed-in">
-        <View style={styles.profileHeader}>
-          <UserButton />
-          <ThemedText style={styles.greeting}>
-            Hello {user?.emailAddresses[0].emailAddress}
-          </ThemedText>
-        </View>
+        <SafeAreaView style={styles.container}>
+          <Text style={styles.title}>
+            Welcome!
+          </Text>
+          <View style={styles.profileHeader}>
+            <View style={styles.avatarContainer}>
+              <UserButton />
+            </View>
+            <Text style={styles.greeting}>
+              Hello {user?.emailAddresses[0]?.emailAddress}
+            </Text>
+          </View>
 
-        <Pressable 
-          className="bg-[#0a7ea4] active:opacity-70 py-3 px-6 rounded-lg items-center mt-2 w-full"
-          onPress={() => setIsProfileOpen(true)}
-        >
-          <Text className="text-white font-semibold text-base">Manage Profile</Text>
-        </Pressable>
+          <Pressable 
+            className="bg-[#0a7ea4] active:opacity-70 py-3 px-6 rounded-lg items-center mt-2 w-full"
+            onPress={() => setIsProfileOpen(true)}
+          >
+            <Text className="text-white font-semibold text-base">Manage Profile</Text>
+          </Pressable>
 
-        <SignOutButton />
+          <SignOutButton />
 
-        <Modal
-          animationType="slide"
-          visible={isProfileOpen}
-          presentationStyle="pageSheet"
-          onRequestClose={() => setIsProfileOpen(false)}
-        >
-          <UserProfileView onDismiss={() => setIsProfileOpen(false)} />
-        </Modal>
+          <Modal
+            animationType="slide"
+            visible={isProfileOpen}
+            presentationStyle="pageSheet"
+            onRequestClose={() => setIsProfileOpen(false)}
+          >
+            <UserProfileView onDismiss={() => setIsProfileOpen(false)} />
+          </Modal>
+        </SafeAreaView>
       </Show>
-    </ThemedView>
+    </>
   );
 }
 
@@ -70,8 +67,11 @@ const styles = StyleSheet.create({
     gap: 16,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: '#fff',
   },
   title: {
+    fontSize: 32,
+    fontWeight: 'bold',
     marginBottom: 12,
   },
   profileHeader: {
@@ -79,6 +79,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
     marginBottom: 8,
+  },
+  avatarContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    overflow: 'hidden',
   },
   greeting: {
     fontSize: 18,
