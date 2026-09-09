@@ -13,7 +13,7 @@ export default function Page() {
         <Redirect href="/sign-in" />
       </Show>
       <Text style={styles.title}>Welcome!</Text>
-
+      
       <Show when="signed-in">
         <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
         <Pressable style={styles.button} onPress={() => signOut()}>
