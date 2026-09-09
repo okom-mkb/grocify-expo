@@ -1,13 +1,23 @@
 const { neon } = require("@neondatabase/serverless");
 const crypto = require("node:crypto");
 
-const databaseUrl = process.env.DATABASE_URL;
+let databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {
   throw new Error(
     "DATABASE_URL is required. Example: DATABASE_URL=... npm run seed:grocery",
   );
 }
+
+// Clean and sanitize the database URL (handling line breaks, extra spaces, and enclosing quotes)
+databaseUrl = databaseUrl.trim();
+if (
+  (databaseUrl.startsWith('"') && databaseUrl.endsWith('"')) ||
+  (databaseUrl.startsWith("'") && databaseUrl.endsWith("'"))
+) {
+  databaseUrl = databaseUrl.slice(1, -1);
+}
+databaseUrl = databaseUrl.replace(/[\r\n]+/g, "").replace(/\s+/g, "");
 
 const sql = neon(databaseUrl);
 
@@ -101,7 +111,7 @@ async function seed() {
       name TEXT NOT NULL,
       category TEXT NOT NULL,
       quantity INTEGER NOT NULL DEFAULT 1,
-      unit TEXT NOT NULL,
+      unit INTEGER NOT NULL,
       purchased BOOLEAN NOT NULL DEFAULT FALSE,
       priority TEXT NOT NULL DEFAULT 'medium',
       updated_at BIGINT NOT NULL
