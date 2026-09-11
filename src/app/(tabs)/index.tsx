@@ -1,11 +1,13 @@
 import { Show, useClerk, useUser } from "@clerk/expo";
-import { UserButton, UserProfileView } from "@clerk/expo/native";
+import { UserButton } from "@clerk/expo/native";
 import { Redirect } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useGloceryStore } from "../../../store/grocery-store";
 
 export default function Page() {
   const { user } = useUser();
   const { signOut } = useClerk();
+
 
   return (
     <View style={styles.container}>
@@ -13,7 +15,7 @@ export default function Page() {
         <Redirect href="/sign-in" />
       </Show>
       <Text style={styles.title}>Welcome!</Text>
-      
+
       <Show when="signed-in">
         <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
         <Pressable style={styles.button} onPress={() => signOut()}>
