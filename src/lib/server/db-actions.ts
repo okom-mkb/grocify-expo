@@ -21,6 +21,7 @@ export const createGroceryItem = async (input: {
       name: input.name,
       category: input.category,
       quantity: Math.max(1, input.quantity),
+      unit: 1,
       purchased: false,
       priority: input.priority,
       updated_at: Date.now(),

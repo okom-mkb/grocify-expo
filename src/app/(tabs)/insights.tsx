@@ -1,9 +1,10 @@
-import { Text, View } from "react-native";
+import { View, Text } from "react-native";
+
 
 const InsightsScreen = () => {
   return (
     <View>
-      <Text>InsightsScreen</Text>
+      <Text>Insights Screen</Text>
     </View>
   );
 };

@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
-import React from 'react'
 
-const PlannerScreen= () => {
+
+const PlannerScreen = () => {
   return (
     <View>
-      <Text>PlannerScreen</Text>
+      <Text>Planner Screen</Text>
     </View>
   )
 }

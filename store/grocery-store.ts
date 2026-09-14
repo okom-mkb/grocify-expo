@@ -1,7 +1,6 @@
 import { create } from "zustand";
 
-export type GroceryCategory =
-  "Produce" | "Dairy" | "Bakery" | "Pantry" | "Snacks";
+export type GroceryCategory = "Produce" | "Dairy" | "Bakery" | "Pantry" | "Snacks";
 export type GroceryPriority = "low" | "medium" | "high";
 
 export type GroceryItem = {
@@ -17,7 +16,7 @@ export type CreateItemInput = {
   name: string;
   category: GroceryCategory;
   quantity: number;
-  priority: boolean;
+  priority: GroceryPriority;
 };
 
 type ItemsResponse = { items: GroceryItem[] };
@@ -35,7 +34,7 @@ type GroceryStore = {
   clearPurchased: () => Promise<void>;
 };
 
-export const useGloceryStore = create<GroceryStore>((set, get) => ({
+export const useGroceryStore = create<GroceryStore>((set, get) => ({
   items: [],
   isLoading: false,
   error: null,
@@ -55,9 +54,9 @@ export const useGloceryStore = create<GroceryStore>((set, get) => ({
       set({ isLoading: false });
     }
   },
+
   addItem: async (input) => {
     set({ error: null });
-
     try {
       const res = await fetch("/api/items", {
         method: "POST",
@@ -75,7 +74,7 @@ export const useGloceryStore = create<GroceryStore>((set, get) => ({
       set((state) => ({ items: [payload.item, ...state.items] }));
       return payload.item;
     } catch (error) {
-      console.log("Error adding item:", error);
+      console.error("Error adding item:", error);
       set({ error: "Something went wrong" });
     }
   },
@@ -84,24 +83,22 @@ export const useGloceryStore = create<GroceryStore>((set, get) => ({
     set({ error: null });
 
     try {
-      const res = await fetch("/api/items/${id}", {
+      const res = await fetch(`/api/items/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: nextQuantity }),
       });
       const payload = (await res.json()) as ItemResponse;
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
-
       set((state) => ({
-        items: state.items.map((item) =>
-          item.id === id ? payload.item : item,
-        ),
+        items: state.items.map((item) => (item.id === id ? payload.item : item)),
       }));
     } catch (error) {
-      console.log("Error updating quantity:", error);
+      console.error("Error updating quantity:", error);
       set({ error: "Something went wrong" });
     }
   },
+
   togglePurchased: async (id) => {
     const currentItem = get().items.find((item) => item.id === id);
     if (!currentItem) return;
@@ -119,15 +116,14 @@ export const useGloceryStore = create<GroceryStore>((set, get) => ({
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
 
       set((state) => ({
-        items: state.items.map((item) =>
-          item.id === id ? payload.item : item,
-        ),
+        items: state.items.map((item) => (item.id === id ? payload.item : item)),
       }));
     } catch (error) {
       console.error("Error toggling purchased:", error);
       set({ error: "Something went wrong" });
     }
   },
+
   removeItem: async (id) => {
     set({ error: null });
     try {
@@ -140,6 +136,7 @@ export const useGloceryStore = create<GroceryStore>((set, get) => ({
       set({ error: "Something went wrong" });
     }
   },
+
   clearPurchased: async () => {
     set({ error: null });
     try {
