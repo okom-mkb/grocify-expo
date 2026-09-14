@@ -1,13 +1,11 @@
-import { ClerkProvider } from '@clerk/expo'
-import { tokenCache } from '@clerk/expo/token-cache'
+import { ClerkProvider } from "@clerk/expo";
+import { tokenCache } from "@clerk/expo/token-cache";
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { useColorScheme } from 'react-native'
-import * as WebBrowser from 'expo-web-browser'
+
+import { useColorScheme } from "react-native";
 import "../../global.css";
 
-// Warm up the browser for better performance on Android, and handle auth session completion
-WebBrowser.maybeCompleteAuthSession();
+
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -21,9 +19,8 @@ export default function RootLayout() {
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
       <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }} />
       </ThemeProvider>
-      <StatusBar style="auto" />
     </ClerkProvider>
   );
 }
