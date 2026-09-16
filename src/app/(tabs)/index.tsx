@@ -9,10 +9,10 @@ export default function ListScreen() {
   const { items, loadItems } = useGroceryStore();
 
   const pendingItems = items.filter((item) => !item.purchased);
-
+  
   return (
     <FlatList
-      className="flex-1 bg-background"
+      className="flex-1 bg-background py-5"
       data={pendingItems}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <PendingItemCard item={item} />}
