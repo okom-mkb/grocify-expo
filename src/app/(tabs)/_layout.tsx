@@ -10,7 +10,6 @@ export default function Layout() {
 
   const { loadItems, items } = useGroceryStore();
 
-
   const { colorScheme } = useColorScheme();
   const isDark = colorScheme === "dark";
   const tabTintColor = isDark ? "hsl(142 70% 54%)" : "hsl(147 75% 33%)";
@@ -44,7 +43,7 @@ export default function Layout() {
         />
         <NativeTabs.Trigger.Label>Planner</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
-
+      
       <NativeTabs.Trigger name="insights">
         <NativeTabs.Trigger.Icon
           sf={{ default: "chart.bar", selected: "chart.bar.fill" }}
@@ -52,6 +51,6 @@ export default function Layout() {
         />
         <NativeTabs.Trigger.Label>Insights</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
-    </NativeTabs>
-  );
+      </NativeTabs>
+);
 }

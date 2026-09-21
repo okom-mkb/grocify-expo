@@ -1,9 +1,18 @@
-import { ActivityIndicator, View } from "react-native";
+import { useAuth } from "@clerk/expo";
+import { Redirect } from "expo-router";
 
-export default function SSOCallback() {
-  return (
-    <View className="flex-1 items-center justify-center bg-background dark:bg-secondary">
-      <ActivityIndicator size="large" color="#208AEF" />
-    </View>
-  );
-}
+const SSOCallbackScreen = () => {
+  const { isSignedIn, isLoaded } = useAuth();
+
+  if (!isLoaded) {
+    return null;
+  }
+
+  if (isSignedIn) {
+    return <Redirect href={"/"} />;
+  }
+
+  return <Redirect href={"/(auth)/sign-in"} />;
+};
+
+export default SSOCallbackScreen;
